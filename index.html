@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>All-in-One | Premium Multitasking Hub</title>
+    
+    <!-- Security: Content Security Policy (CSP) -->
+    <!-- Ensures only scripts/resources from whitelisted safe websites can load, heavily blocking generic XSS -->
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https://images.unsplash.com https://i.pravatar.cc; media-src 'self' blob:; frame-src https://www.youtube.com; connect-src 'self';">
+
+    <!-- Tailwind CSS (No Node.js req) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#8b5cf6',
+                        secondary: '#ec4899',
+                        dark: '#0f1016',
+                        glass: 'rgba(255, 255, 255, 0.05)',
+                        'glass-border': 'rgba(255, 255, 255, 0.1)',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="bg-dark text-white font-sans overflow-x-hidden min-h-screen app-bg relative selection:bg-primary selection:text-white">
+
+    <!-- Entry Welcome Overlay (Required to trigger Browser Auto-Play Audio smoothly) -->
+    <div id="entry-overlay" class="fixed inset-0 z-[100] bg-dark/95 backdrop-blur-xl flex flex-col items-center justify-center transition-all duration-700">
+        <div class="relative w-40 h-40 mb-10">
+            <div class="absolute inset-0 bg-primary/40 rounded-full blur-[50px] animate-pulse"></div>
+            <div class="absolute inset-4 rounded-full bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-[0_0_50px_rgba(139,92,246,0.5)]">
+                <i class="fa-solid fa-infinity text-6xl text-white"></i>
+            </div>
+        </div>
+        <h1 class="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-primary to-white mb-4 glow-text text-center px-4">Welcome to All-in-One</h1>
+        <p class="text-gray-400 mb-12 text-center text-sm md:text-base px-6">Experience synchronized shopping, chatting, and music instantly.</p>
+        <button onclick="enterApp()" class="btn-primary group flex items-center gap-4 text-xl px-10 py-4 shadow-[0_0_30px_rgba(139,92,246,0.4)]">
+            <i class="fa-solid fa-power-off group-hover:rotate-180 transition-transform duration-500"></i> Enter Hub
+        </button>
+    </div>
+
+    <!-- Ambient Glowing Orbs Background -->
+    <div class="fixed top-[-10%] left-[-10%] w-[40%] h-[40%] bg-primary rounded-full mix-blend-screen filter blur-[150px] opacity-30 animate-pulse-slow z-0 pointer-events-none"></div>
+    <div class="fixed bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-secondary rounded-full mix-blend-screen filter blur-[150px] opacity-20 animate-pulse-slow z-0 pointer-events-none" style="animation-delay: 2s;"></div>
+
+    <!-- Navigation Bar -->
+    <nav class="fixed top-0 w-full z-40 glass-panel border-b border-glass-border backdrop-blur-md transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                <!-- Logo -->
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="navigate('home')">
+                    <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center shadow-lg shadow-primary/30">
+                        <i class="fa-solid fa-infinity text-xl"></i>
+                    </div>
+                    <span class="font-bold text-2xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400">All In One</span>
+                </div>
+                
+                <!-- Desktop Menu -->
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-center space-x-8">
+                        <a href="#home" class="nav-link active px-3 py-2 rounded-lg text-sm font-medium transition-all hover:text-white group flex flex-col items-center">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-house mb-1 group-hover:-translate-y-1 transition-transform"></i> Home</span>
+                        </a>
+                        <a href="#shop" class="nav-link px-3 py-2 rounded-lg text-sm font-medium transition-all hover:text-white group flex flex-col items-center text-gray-400">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-store mb-1 group-hover:-translate-y-1 transition-transform"></i> Shop</span>
+                        </a>
+                        <a href="#chat" class="nav-link px-3 py-2 rounded-lg text-sm font-medium transition-all hover:text-white group flex flex-col items-center text-gray-400">
+                            <span class="flex items-center gap-2"><i class="fa-solid fa-comments mb-1 group-hover:-translate-y-1 transition-transform"></i> Network</span>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Right Side Actions & Multitasking Triggers -->
+                <div class="flex items-center gap-4">
+                    <button class="icon-btn relative group" onclick="toggleMiniChat()">
+                        <i class="fa-regular fa-comment-dots text-lg"></i>
+                        <span class="absolute top-0 right-0 block h-2 w-2 rounded-full bg-secondary ring-2 ring-dark"></span>
+                        <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-gray-800 text-xs py-1 px-2 rounded">
+                            Floating Chat
+                        </div>
+                    </button>
+                    <button class="icon-btn group relative" onclick="toggleMusicWidget()">
+                        <i class="fa-brands fa-youtube text-lg"></i>
+                        <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-gray-800 text-xs py-1 px-2 rounded">
+                            Music Player
+                        </div>
+                    </button>
+                    <button class="icon-btn group relative">
+                        <i class="fa-solid fa-cart-shopping text-lg"></i>
+                        <span id="cart-count" class="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-primary text-[10px] font-bold">0</span>
+                    </button>
+                    <div class="h-10 w-10 rounded-full bg-gradient-to-tr from-gray-700 to-gray-600 p-[2px] cursor-pointer">
+                        <img class="h-full w-full rounded-full object-cover" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?ixlib=rb-4.0.3&auto=format&fit=crop&w=150&q=80" alt="User Avatar">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area (Dynamic Routing injection) -->
+    <main id="app-content" class="pt-28 pb-20 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto min-h-screen relative z-10 transition-opacity duration-300">
+        <!-- Content will be injected here by app.js -->
+    </main>
+
+    <!-- PAGE TEMPLATES (Hidden, used by JS Router) -->
+
+    <!-- Home Page Template -->
+    <template id="page-home">
+        <div class="flex flex-col lg:flex-row items-center justify-between gap-12 mt-10 lg:mt-20 fade-in-up">
+            <div class="lg:w-1/2 relative space-y-8 z-10">
+                <div class="inline-block px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-sm font-semibold mb-2 shadow-[0_0_15px_rgba(139,92,246,0.3)]">
+                    <i class="fa-solid fa-bolt mr-2 text-yellow-400"></i> The Ultimate Multitasking Experience
+                </div>
+                <h1 class="text-5xl lg:text-7xl font-extrabold leading-tight tracking-tight">
+                    Do it all.<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary to-secondary glow-text">In One Place.</span>
+                </h1>
+                <p class="text-gray-400 text-lg sm:text-xl max-w-lg leading-relaxed font-light">
+                    Shop for premium items, chat with the community, and listen to YouTube music simultaneously. Welcome to the future of web browsing.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-4">
+                    <button onclick="navigate('shop')" class="btn-primary flex items-center gap-2 group">
+                        Start Shopping <i class="fa-solid fa-arrow-right group-hover:translate-x-1 transition-transform"></i>
+                    </button>
+                    <button onclick="toggleMusicWidget()" class="btn-secondary flex items-center gap-2">
+                        <i class="fa-solid fa-play"></i> Play Music
+                    </button>
+                </div>
+            </div>
+            <div class="lg:w-1/2 relative">
+                <!-- Decorative Hero Element -->
+                <div class="relative w-full aspect-square max-w-lg mx-auto">
+                    <div class="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-3xl animate-pulse-slow"></div>
+                    <div class="absolute inset-4 glass-panel rounded-3xl border border-glass-border flex flex-col overflow-hidden shadow-2xl transform rotate-3 hover:rotate-0 transition-transform duration-500">
+                        <img src="https://images.unsplash.com/photo-1618220179428-22790b461013?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80" alt="Hero" class="object-cover w-full h-full opacity-80 mix-blend-overlay">
+                        <div class="absolute inset-0 bg-gradient-to-t from-dark/90 via-dark/40 to-transparent"></div>
+                        <div class="absolute bottom-6 left-6 right-6">
+                            <div class="glass-panel p-4 rounded-xl border border-white/10 flex items-center gap-4">
+                                <div class="w-12 h-12 rounded-full bg-primary flex items-center justify-center animate-bounce shadow-[0_0_20px_rgba(139,92,246,0.5)]">
+                                    <i class="fa-solid fa-headphones text-xl"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white">Focus Mode Active</h4>
+                                    <p class="text-xs text-gray-300">Listening to Lofi Beats & Shopping</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Features grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-32 mb-20 fade-in-up" style="animation-delay: 0.2s">
+            <div class="feature-card glass-panel p-8 rounded-2xl border border-glass-border hover:border-primary/50 transition-colors group">
+                <div class="w-14 h-14 rounded-xl bg-primary/20 text-primary flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-primary group-hover:text-white transition-all shadow-[0_0_15px_rgba(139,92,246,0.2)]">
+                    <i class="fa-solid fa-store"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Premium Shopping</h3>
+                <p class="text-gray-400 text-sm">Discover and buy high-end electronics, fashion, and accessories with a buttery smooth checkout experience.</p>
+            </div>
+            <div class="feature-card glass-panel p-8 rounded-2xl border border-glass-border hover:border-secondary/50 transition-colors group">
+                <div class="w-14 h-14 rounded-xl bg-secondary/20 text-secondary flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-secondary group-hover:text-white transition-all shadow-[0_0_15px_rgba(236,72,153,0.2)]">
+                    <i class="fa-solid fa-messages"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Seamless Networking</h3>
+                <p class="text-gray-400 text-sm">Chat with other online users naturally. Start a floating conversation while you continue browsing the store.</p>
+            </div>
+            <div class="feature-card glass-panel p-8 rounded-2xl border border-glass-border hover:border-blue-500/50 transition-colors group">
+                <div class="w-14 h-14 rounded-xl bg-blue-500/20 text-blue-500 flex items-center justify-center text-2xl mb-6 group-hover:scale-110 group-hover:bg-blue-500 group-hover:text-white transition-all shadow-[0_0_15px_rgba(59,130,246,0.2)]">
+                    <i class="fa-brands fa-youtube"></i>
+                </div>
+                <h3 class="text-xl font-bold mb-3">Integrated Music</h3>
+                <p class="text-gray-400 text-sm">A persistently floating YouTube player means your tunes never stop, no matter what page you navigate to.</p>
+            </div>
+        </div>
+    </template>
+
+    <!-- Shop Page Template -->
+    <template id="page-shop">
+        <div class="fade-in-up">
+            <div class="flex items-end justify-between mb-10">
+                <div>
+                    <h2 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-white inline-block mb-2">Exclusive Store</h2>
+                    <p class="text-gray-400 text-sm">Curated items just for you. Add to cart to see the magic.</p>
+                </div>
+                <div class="flex gap-2">
+                    <button class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-sm font-medium transition-colors">All</button>
+                    <button class="px-4 py-2 rounded-lg bg-primary/20 text-primary border border-primary/30 hover:bg-primary/30 text-sm font-medium transition-colors">Tech</button>
+                    <button class="px-4 py-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 text-sm font-medium transition-colors">Lifestyle</button>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6" id="product-grid">
+                <!-- Script will populate this -->
+            </div>
+        </div>
+    </template>
+
+    <!-- Full Chat Page Template -->
+    <template id="page-chat">
+        <div class="fade-in-up h-[calc(100vh-8rem)] flex gap-6">
+            <!-- Sidebar / Channels -->
+            <div class="w-1/4 glass-panel border border-glass-border rounded-2xl hidden md:flex flex-col overflow-hidden h-full">
+                <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5">
+                    <h3 class="font-bold text-lg"><i class="fa-solid fa-users text-primary mr-2"></i>Community</h3>
+                    <div class="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center cursor-pointer hover:bg-white/20 transition-colors">
+                        <i class="fa-solid fa-plus text-sm"></i>
+                    </div>
+                </div>
+                <div class="p-2 flex-grow overflow-y-auto custom-scrollbar">
+                    <div class="channel-item active p-3 rounded-xl mb-1 flex items-center gap-3 cursor-pointer bg-primary/20 border border-primary/30">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg">
+                            <i class="fa-solid fa-hashtag"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm">General</div>
+                            <div class="text-xs text-gray-400 truncate w-32">Welcome everyone!</div>
+                        </div>
+                    </div>
+                    <div class="channel-item p-3 rounded-xl mb-1 flex items-center gap-3 cursor-pointer hover:bg-white/5 transition-colors">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-cyan-500 flex items-center justify-center">
+                            <i class="fa-solid fa-basket-shopping"></i>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm">Shopping Finds</div>
+                            <div class="text-xs text-gray-400 truncate w-32">Check out this watch...</div>
+                        </div>
+                    </div>
+                    
+                    <div class="px-3 pt-6 pb-2 text-xs font-bold text-gray-500 uppercase tracking-wider">Direct Messages</div>
+                    
+                    <div class="channel-item p-3 rounded-xl mb-1 flex items-center gap-3 cursor-pointer hover:bg-white/5 transition-colors">
+                        <div class="relative">
+                            <img src="https://i.pravatar.cc/150?u=a042581f4e29026024d" class="w-10 h-10 rounded-full object-cover">
+                            <span class="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-dark rounded-full"></span>
+                        </div>
+                        <div>
+                            <div class="font-semibold text-sm">Alex Chen</div>
+                            <div class="text-xs text-gray-400 truncate w-32">Is that headphone good?</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Chat Area -->
+            <div class="flex-1 glass-panel border border-glass-border rounded-2xl flex flex-col overflow-hidden h-full shadow-2xl relative">
+                <!-- Chat Header -->
+                <div class="h-16 border-b border-white/10 bg-white/5 flex items-center px-6 justify-between shrink-0">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-full bg-gradient-to-br from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-primary/20">
+                            <i class="fa-solid fa-hashtag"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold">General Chat</h3>
+                            <p class="text-xs text-primary flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-green-500 inline-block animate-pulse"></span> 42 online</p>
+                        </div>
+                    </div>
+                    <div class="flex gap-3">
+                        <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 transition-colors flex items-center justify-center text-gray-300">
+                            <i class="fa-solid fa-phone"></i>
+                        </button>
+                        <button class="w-10 h-10 rounded-full bg-white/5 hover:bg-white/10 transition-colors flex items-center justify-center text-gray-300">
+                            <i class="fa-solid fa-video"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Chat Messages (Shared between Full page and Mini Chat via JS rendering to keep sync) -->
+                <div class="flex-grow p-6 overflow-y-auto custom-scrollbar flex flex-col gap-4" id="main-chat-container">
+                    <!-- JS handles messages -->
+                </div>
+
+                <!-- Chat Input -->
+                <div class="p-4 border-t border-white/10 bg-white/5 shrink-0">
+                    <form onsubmit="handleChatSubmit(event, 'main-chat-input')" class="relative flex items-center">
+                        <button type="button" class="absolute left-3 text-gray-400 hover:text-white transition-colors">
+                            <i class="fa-solid fa-paperclip"></i>
+                        </button>
+                        <input type="text" id="main-chat-input" placeholder="Message #general..." class="w-full bg-dark/50 border border-white/10 rounded-xl py-3 pl-12 pr-12 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-sm">
+                        <button type="submit" class="absolute right-3 w-8 h-8 bg-primary rounded-lg text-white flex items-center justify-center hover:bg-primary/80 transition-colors disabled:opacity-50">
+                            <i class="fa-solid fa-paper-plane text-xs"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <!-- FLOATING MULTITASKING WIDGETS -->
+
+    <!-- Floating Youtube Player -->
+    <div id="floating-music" class="fixed bottom-6 right-6 w-80 sm:w-96 glass-panel border border-glass-border rounded-xl shadow-2xl z-50 transform transition-all duration-300 translate-y-[150%] opacity-0 overflow-hidden group/player">
+        <!-- Header / Drag Handle area -->
+        <div class="bg-dark/80 backdrop-blur-md px-4 py-2 border-b border-white/10 flex items-center justify-between cursor-move" id="music-header">
+            <div class="flex items-center gap-2">
+                <i class="fa-solid fa-music text-primary"></i>
+                <span class="text-xs font-semibold text-gray-200">Music Player</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="minimizeMusic()" class="text-gray-400 hover:text-white"><i class="fa-solid fa-window-minimize text-xs"></i></button>
+                <button onclick="toggleMusicWidget()" class="text-gray-400 hover:text-red-400"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
+        </div>
+
+        <!-- Music Source Tabs -->
+        <div class="bg-dark/80 px-4 py-2 flex items-center gap-6 border-b border-white/5 text-xs font-semibold text-gray-400">
+            <button onclick="switchMusicSource('youtube')" id="tab-youtube" class="text-white border-b-2 border-primary pb-1 cursor-pointer">YouTube</button>
+            <button onclick="switchMusicSource('local')" id="tab-local" class="hover:text-white pb-1 border-b-2 border-transparent hover:border-white/30 transition-all cursor-pointer">Local MP3</button>
+        </div>
+        
+        <!-- Source 1: YouTube -->
+        <div id="source-youtube" class="transition-opacity duration-300">
+            <!-- Video Container -->
+            <div class="relative w-full pt-[56.25%]" id="youtube-embed-container">
+                <!-- Default Lofi Girl Radio (24/7 stream) embedded nicely -->
+                <iframe id="yt-player" class="absolute top-0 left-0 w-full h-full border-0" src="https://www.youtube.com/embed/jfKfPfyJRdk?enablejsapi=1&autoplay=0&mute=0&controls=1&showinfo=0&rel=0&modestbranding=1" title="YouTube video player" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            </div>
+            
+            <!-- Custom Controls / Search Overlay -->
+            <div class="bg-dark/80 px-4 py-3 flex items-center gap-2 border-t border-white/10">
+                <input type="text" id="yt-search-input" placeholder="Paste YouTube Link or ID..." class="flex-1 bg-white/5 border border-white/10 rounded px-2 py-1 text-xs focus:outline-none focus:border-red-500">
+                <button onclick="loadCustomVideo()" class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-xs transition-colors font-medium shadow-[0_0_10px_rgba(220,38,38,0.5)]">Play</button>
+            </div>
+        </div>
+
+        <!-- Source 2: Local MP3 Upload -->
+        <div id="source-local" class="hidden flex-col gap-4 p-5 bg-dark/95 transition-opacity duration-300">
+            <div class="border-2 border-dashed border-white/20 rounded-xl p-8 text-center hover:border-primary/50 transition-all cursor-pointer relative bg-white/5 flex flex-col items-center justify-center">
+                <input type="file" id="local-audio-input" accept="audio/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer" onchange="handleLocalAudio(event)">
+                <i class="fa-solid fa-cloud-arrow-up text-4xl text-primary mb-3"></i>
+                <p class="text-sm font-semibold text-white">Upload your beats</p>
+                <p class="text-xs text-gray-500 mt-1" id="local-file-name">Drag & Drop or Click to browse</p>
+            </div>
+            <!-- Custom Styled Native Audio Player -->
+            <audio id="local-audio-player" class="w-full h-10 mt-2 rounded shadow-xl hidden custom-audio-player" controls controlsList="nodownload"></audio>
+        </div>
+    </div>
+
+    <!-- Floating Mini Chat -->
+    <div id="floating-chat" class="fixed bottom-6 right-6 lg:right-[420px] w-80 h-[450px] glass-panel border border-glass-border rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden transform transition-all duration-300 translate-y-[150%] opacity-0">
+        <!-- Header -->
+        <div class="bg-gradient-to-r from-primary/80 to-secondary/80 backdrop-blur-md px-4 py-3 flex items-center justify-between shrink-0 shadow-md">
+            <div class="flex items-center gap-2">
+                <div class="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
+                <span class="text-sm font-semibold text-white">Live Chat</span>
+            </div>
+            <div class="flex items-center gap-3">
+                <button onclick="navigate('chat'); toggleMiniChat();" class="text-white/80 hover:text-white" title="Open Full Chat"><i class="fa-solid fa-expand text-xs"></i></button>
+                <button onclick="toggleMiniChat()" class="text-white/80 hover:text-white"><i class="fa-solid fa-xmark text-sm"></i></button>
+            </div>
+        </div>
+        
+        <!-- Chat Messages Container -->
+        <div class="flex-grow p-4 overflow-y-auto custom-scrollbar flex flex-col gap-3 bg-dark/60 backdrop-blur-sm" id="mini-chat-container">
+            <!-- Messages injected by JS -->
+        </div>
+
+        <!-- Input Area -->
+        <div class="p-3 border-t border-white/10 bg-dark/80 backdrop-blur-md shrink-0">
+            <form onsubmit="handleChatSubmit(event, 'mini-chat-input')" class="relative flex items-center">
+                <input type="text" id="mini-chat-input" placeholder="Type a message..." class="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-4 pr-10 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all text-xs">
+                <button type="submit" class="absolute right-1 w-7 h-7 bg-primary rounded-full text-white flex items-center justify-center hover:bg-primary/80 transition-colors">
+                    <i class="fa-solid fa-paper-plane text-[10px]"></i>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Notification Toast Container -->
+    <div id="toast-container" class="fixed top-24 right-6 z-[60] flex flex-col gap-3 pointer-events-none"></div>
+
+    <!-- Scripts -->
+    <script src="app.js"></script>
+</body>
+</html>
